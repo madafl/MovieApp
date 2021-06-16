@@ -1,9 +1,9 @@
 <div class="container">
 <div class="dropdown" style="float:right">
-            <form class="form-inline my-2 my-lg-0" action="{{ route('search', $search) }}" method="POST"  >
-                <input wire:model="search" type="search" class="form-control rounded" onchange="checkFilled();" placeholder="Search" aria-label="Search" aria-describedby="search-addon" id="drp" value="{{$search}}" name="search"/>
-                <button class="btn btn-dark" type="submit">
-                    <i class="fa fa-search" style="color: #e28613;"></i>
+<form class="form-inline my-2 my-lg-0" action="{{ route('search', $search) }}" method="POST"  >
+                <input wire:model="search" type="search" class="form-control rounded" onchange="checkFilled();"  placeholder="Search" aria-label="Search" aria-describedby="search-addon" id="drp" value="{{$search}}" name="search"/>
+                <button class="btn btn-info" type="submit">
+                    <i class="fa fa-search" style="color: #fff;"></i>
                 </button>
             </form>
         <div>

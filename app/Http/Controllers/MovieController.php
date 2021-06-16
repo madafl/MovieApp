@@ -14,6 +14,7 @@ use Redirect;
 //in config-services punem api key
 class MovieController extends Controller
 {
+    //api request catre themoviedb care returneaza vectori cu filmele populare, genurile
     public $search = '';
     public function index(){
         $key= config('services.tmdb.token');
@@ -32,7 +33,7 @@ class MovieController extends Controller
             return[$genre['id']=>$genre['name']];
         });
         
-        
+        //returneaza index view impreuna cu rezultatele requesturilor
         return view('index',[
             'popularMovies' => $popularMovies,  //in view accesez vectorul cu popularMovies
             'popularTvSeries' => $popularTvSeries,
@@ -45,20 +46,36 @@ class MovieController extends Controller
        //append pentru a accesa actori, poze, video
         $movie= Http::get('https://api.themoviedb.org/3/movie/'.$id .'?api_key='.$key.'&language=ro-RO&append_to_response=credits,videos,images')
             ->json();
-        return view('show',[
-            'movie' => $movie
-        ]);
+            $isMovieWatched = DB::table('watched_movies')
+            ->select('user_id')
+            ->where('movie_id', $id)
+            ->count();
+            $isMovieWatchlist = DB::table('watchlist')
+            ->select('user_id')
+            ->where('movie_id', $id)
+            ->count();
+    
+    
+            return view('show',[
+                'movie' => $movie,
+                'isMovieWatched' => $isMovieWatched,
+                'isMovieWatchlist' => $isMovieWatchlist
+            ]);
     }
 
     public function watched(Request $request){
         $input = $request->all();
         $id= Auth::id();
        
-       $count = DB::table('watched_movies')
-                    ->select('user_id')
-                    ->where('movie_id', $request->input('watched'))
-                    ->count();
-        if($count == 1){
+        $countWatched = DB::table('watched_movies')
+        ->select('user_id')
+        ->where('movie_id', $request->input('watched'))
+        ->count();
+$countWatchlist = DB::table('watchlist')
+        ->select('user_id')
+        ->where('movie_id', $request->input('watched'))
+        ->count();
+if($countWatched == 1 || $countWatchlist == 1){
             return Redirect::to('/profile')->with('error', true)->with('message','Filmul exista deja in lista ta!');
         } else {
             $movie = new WatchedMovies();
@@ -72,11 +89,15 @@ class MovieController extends Controller
     public function watchlist(Request $request){
         $input = $request->all();
         $id= Auth::id();
-        $count = DB::table('watchlist')
+        $countWatched = DB::table('watched_movies')
                     ->select('user_id')
                     ->where('movie_id', $request->input('watchlist'))
                     ->count();
-        if($count == 1){
+        $countWatchlist = DB::table('watchlist')
+                    ->select('user_id')
+                    ->where('movie_id', $request->input('watchlist'))
+                    ->count();
+        if($countWatched == 1 || $countWatchlist == 1){
             return Redirect::to('/profile')->with('error', true)->with('message','Filmul exista deja in lista ta!');
         } else {
             $movie = new Watchlist();

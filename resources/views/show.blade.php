@@ -1,21 +1,32 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="container">
+<div class="container">
         <div class="row">
-                <img class="card-img-top img-fluid" src="{{ 'https://image.tmdb.org/t/p/w185/'.$movie['poster_path'] }}" style="width:250px;">
-                <div class="col-sm">
+        <div>
+            <h3>{{$movie['title']}}</h3>
+            <img class="card-img-top img-fluid" src="{{ 'https://image.tmdb.org/t/p/w185/'.$movie['poster_path'] }}" style="width:250px;">
+        </div>
+            <div class="col-sm" style="margin-top:40px;">
                 <div class="row">
                     <div class="col-sm-3">
                         <form action="{{ route('watchlist', $movie['id']) }}" method="POST">
                             @csrf 
-                            <button type="submit" class="btn btn-info" value="{{$movie['id']}}" name="watchlist" > Vreau sa vad </button>
+                            @if($isMovieWatchlist == 1)
+                            <button type="submit" class="btn " value="{{$movie['id']}}" name="watchlist" style="width:130px;background-color:#e28613;color:white"> Vreau sa vad </button>
+                            @else
+                            <button type="submit" class="btn btn-info" value="{{$movie['id']}}" name="watchlist" style="width:130px;"> Vreau sa vad </button>
+                            @endif
                         </form>
                     </div>
                     <div class="col-sm-3">
                         <form action="{{ route('watched', $movie['id']) }}" method="POST">
                             @csrf 
-                            <button type="submit" class="btn btn-info" value="{{$movie['id']}}" name="watched"> Vazut </button>
+                            @if($isMovieWatched == 1)
+                            <button type="submit" class="btn " value="{{$movie['id']}}" name="watched" style="width:130px;background-color:#e28613;color:white"> Vazut </button>
+                            @else
+                            <button type="submit" class="btn btn-info" value="{{$movie['id']}}" name="watched" style="width:130px;"> Vazut </button>
+                            @endif
                         </form>
                     </div>
                 </div>
@@ -30,14 +41,23 @@
                         @endforeach
                     </p>
                 </div>
+                
                 </div>
-        </div>       
-            @if (count($movie['videos']['results']) >0)
+                @if (($movie['overview']))
+                    <div>
+                        <h3 style="font-weight:bold"> Descriere</h3>
+                        <p> {{ $movie['overview']}} </p>
+                    </div>
+                @endif
+
+        </div>   
+        <div>    
+            @if (count($movie['videos']['results']) > 0)
                 <div> Trailer</div>
                 <a href="https://youtube.com/watch?v={{ $movie['videos']['results'][0]['key'] }}"  ></a>
                 <div>
             @endif
-        
+            <hr>
             <h3>Crew</h3>
             @foreach($movie['credits']['crew'] as $crew)
                 @if ($loop->index<5 )
@@ -45,7 +65,7 @@
                     <div>{{ $crew['name'] }} {{ $crew['job'] }} </div>
                 @endif
             @endforeach
-        
+        <hr>
             <h3>Cast</h3>
                 <div style="display:flex">
                     @foreach ($movie['credits']['cast'] as $cast)
@@ -61,6 +81,7 @@
                         </a>
                         @endif
                     @endforeach
+                    </div>
                 
     </div>
        

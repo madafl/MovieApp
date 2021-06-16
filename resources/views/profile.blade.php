@@ -29,7 +29,8 @@
                 </div>
             @endforeach     
         </div>  
-       <div>
+        <div style="margin-top:20px;margin-bottom:20px;">
+        <hr>
        <h3> Filme de vazut</h3> 
         <div class="row">
             @foreach($watchlistMovies as $movie)

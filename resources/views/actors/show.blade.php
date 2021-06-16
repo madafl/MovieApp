@@ -8,15 +8,15 @@
                 <div class="col-sm-3" style="padding:10px;">
                     <a style="text-decoration:none;color:black;"> 
                     @if ($actor['profile_path'] != null)
-                        <img class="card-img-top" src="{{ 'https://image.tmdb.org/t/p/w185/'.$actor['profile_path'] }}">
+                        <img class="card-img-top" src="{{ 'https://image.tmdb.org/t/p/w185/'.$actor['profile_path'] }}" style="width:103%;margin-right:30px;">
                         
                     @else
-                        <img class="card-img-top" src= 'https://www.almamater.ro/wp-content/uploads/2020/02/No-picture-3.png'style="width:91%;" >
+                        <img class="card-img-top" src= 'https://www.almamater.ro/wp-content/uploads/2020/02/No-picture-3.png' style="width:91%;" >
                         
                     @endif
                     </a>
                 </div>  
-                <div>
+                <div style="margin-left:30px;">
                     <h3> Filme </h3>
                     @foreach ($actorMovies['cast'] as $movie )
                         @if ($loop->index<10 )
